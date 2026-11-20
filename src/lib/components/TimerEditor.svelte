@@ -4,6 +4,7 @@
   import { COLORS, colorHex } from "#lib/colors.ts";
   import { formatTime } from "#lib/run.ts";
   import { app, firstEmoji } from "#lib/state.svelte.ts";
+  import { t } from "#lib/i18n/index.svelte.ts";
   import {
     MAX_LABEL_LENGTH,
     MAX_MINUTES,
@@ -51,10 +52,14 @@
 </script>
 
 {#if timer}
-  <Modal title={isNew ? "New timer" : "Edit timer"} {onclose} size="medium">
+  <Modal
+    title={isNew ? t("editor.new") : t("timer.editTimerTitle")}
+    {onclose}
+    size="medium"
+  >
     <div class="flex-1 divide-y divide-slate-100 overflow-y-auto px-4 sm:px-6">
       <div class="flex flex-col gap-2 py-4">
-        <label for="editor-name" class="font-semibold">Name</label>
+        <label for="editor-name" class="font-semibold">{t("editor.name")}</label>
         <input
           id="editor-name"
           type="text"
@@ -68,14 +73,15 @@
 
       <div class="flex flex-col gap-3 py-4">
         <div>
-          <h3 id="segments-title" class="font-semibold">Segments</h3>
+          <h3 id="segments-title" class="font-semibold">{t("editor.segments")}</h3>
           <p class="text-sm text-slate-600">
-            {timer.segments.length} of {MAX_SEGMENTS} · {formatTime(
-              totalMinutes * 60_000,
-            )} in all.
+            {t("editor.summary", {
+              n: timer.segments.length,
+              max: MAX_SEGMENTS,
+              time: formatTime(totalMinutes * 60_000),
+            })}
             {#if isRunning}
-              This timer is running: changing a length or the order starts it
-              over.
+              {t("editor.running")}
             {/if}
           </p>
         </div>
@@ -91,7 +97,7 @@
                 <input
                   type="text"
                   class="{input} w-14 text-center text-2xl"
-                  aria-label="Segment {n} emoji"
+                  aria-label={t("editor.emoji", { n })}
                   placeholder="🙂"
                   value={segment.emoji}
                   autocomplete="off"
@@ -104,8 +110,8 @@
                 <input
                   type="text"
                   class="{input} flex-1 basis-40"
-                  aria-label="Segment {n} label"
-                  placeholder="Part {n}"
+                  aria-label={t("editor.label", { n })}
+                  placeholder={t("timer.part", { n })}
                   value={segment.label}
                   maxlength={MAX_LABEL_LENGTH}
                   autocomplete="off"
@@ -117,12 +123,12 @@
                 <div
                   class="flex items-center gap-1"
                   role="group"
-                  aria-label="Segment {n} length"
+                  aria-label={t("editor.length", { n })}
                 >
                   <button
                     type="button"
                     class={iconButton}
-                    aria-label="One minute less"
+                    aria-label={t("editor.minLess")}
                     disabled={segment.minutes <= MIN_MINUTES}
                     onclick={() =>
                       app.updateSegment(timerId, index, {
@@ -135,7 +141,7 @@
                     type="number"
                     inputmode="numeric"
                     class="{input} w-18 text-center tabular-nums"
-                    aria-label="Segment {n} minutes"
+                    aria-label={t("editor.minutesAria", { n })}
                     min={MIN_MINUTES}
                     max={MAX_MINUTES}
                     value={segment.minutes}
@@ -151,7 +157,7 @@
                   <button
                     type="button"
                     class={iconButton}
-                    aria-label="One minute more"
+                    aria-label={t("editor.minMore")}
                     disabled={segment.minutes >= MAX_MINUTES}
                     onclick={() =>
                       app.updateSegment(timerId, index, {
@@ -160,14 +166,14 @@
                   >
                     <Icon name="plus" class="size-5" />
                   </button>
-                  <span class="pl-1 font-semibold text-slate-600">min</span>
+                  <span class="pl-1 font-semibold text-slate-600">{t("editor.minute")}</span>
                 </div>
               </div>
 
               <div class="flex flex-wrap items-center justify-between gap-2">
                 <div
                   role="radiogroup"
-                  aria-label="Segment {n} color"
+                  aria-label={t("editor.color", { n })}
                   class="flex flex-wrap gap-1.5"
                 >
                   {#each COLORS as swatch (swatch.id)}
@@ -200,7 +206,7 @@
                   <button
                     type="button"
                     class={iconButton}
-                    aria-label="Move segment {n} up"
+                    aria-label={t("editor.moveUp", { n })}
                     disabled={index === 0}
                     onclick={() => app.moveSegment(timerId, index, -1)}
                   >
@@ -209,7 +215,7 @@
                   <button
                     type="button"
                     class={iconButton}
-                    aria-label="Move segment {n} down"
+                    aria-label={t("editor.moveDown", { n })}
                     disabled={index === timer.segments.length - 1}
                     onclick={() => app.moveSegment(timerId, index, 1)}
                   >
@@ -218,7 +224,7 @@
                   <button
                     type="button"
                     class={iconButton}
-                    aria-label="Delete segment {n}"
+                    aria-label={t("editor.removeSegment", { n })}
                     disabled={timer.segments.length <= 1}
                     onclick={() => app.removeSegment(timerId, index)}
                   >
@@ -237,7 +243,7 @@
           onclick={() => app.addSegment(timerId)}
         >
           <Icon name="plus" class="size-5" />
-          Add segment
+          {t("editor.add")}
         </button>
       </div>
 
@@ -250,11 +256,11 @@
 
       {#if isNew}
         <p class="py-4 text-sm text-slate-600">
-          💡 Have an idea for another kind of timer, or a new look for this one?
+          💡 {t("editor.idea")}
           <a
             class="font-semibold text-accent-dark underline underline-offset-2"
             href="mailto:support@teacher.dev?subject=Timer%20Toolbox%20idea"
-            >Email us your suggestion</a
+            >{t("editor.ideaCta")}</a
           >.
         </p>
       {/if}
@@ -268,7 +274,7 @@
             class="min-h-11 rounded-full px-4 font-semibold text-slate-600 hover:bg-slate-100"
             onclick={oncancel}
           >
-            Cancel
+            {t("common.cancel")}
           </button>
         {:else if app.timers.length > 1}
           <button
@@ -280,7 +286,7 @@
             }}
           >
             <Icon name="trash" class="size-5" />
-            Delete timer
+            {t("editor.deleteTimer")}
           </button>
         {/if}
         <button
@@ -288,7 +294,7 @@
           class="ml-auto min-h-11 rounded-full bg-accent px-6 font-semibold text-white active:bg-accent-dark"
           onclick={onclose}
         >
-          {isNew ? "Create" : "Done"}
+          {isNew ? t("editor.create") : t("editor.done")}
         </button>
       </div>
     {/snippet}

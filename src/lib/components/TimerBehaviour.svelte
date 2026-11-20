@@ -3,6 +3,7 @@
 <script lang="ts">
   import { CHIMES, END_SOUNDS, sounds } from "#lib/sounds.svelte.ts";
   import type { TimerSettings } from "#lib/types.ts";
+  import { t } from "#lib/i18n/index.svelte.ts";
   import Segmented, { type Choice } from "./Segmented.svelte";
 
   let {
@@ -20,12 +21,12 @@
 
   const advance: Choice[] = $derived([
     {
-      label: "Automatically",
+      label: t("behaviour.auto"),
       checked: value.advance === "auto",
       select: () => onchange({ advance: "auto" }),
     },
     {
-      label: "When I tap",
+      label: t("behaviour.tap"),
       checked: value.advance === "tap",
       select: () => onchange({ advance: "tap" }),
     },
@@ -34,7 +35,7 @@
   // Picking a sound plays it, so teachers hear what they chose.
   const chime: Choice[] = $derived(
     CHIMES.map((sound) => ({
-      label: sound.label,
+      label: t(`chime.${sound.id}`),
       checked: value.chime === sound.id,
       select: () => {
         onchange({ chime: sound.id });
@@ -45,7 +46,7 @@
 
   const endSound: Choice[] = $derived(
     END_SOUNDS.map((sound) => ({
-      label: sound.label,
+      label: t(`endSound.${sound.id}`),
       checked: value.endSound === sound.id,
       select: () => {
         onchange({ endSound: sound.id });
@@ -56,12 +57,12 @@
 
   const overtime: Choice[] = $derived([
     {
-      label: "Count up",
+      label: t("behaviour.countUp"),
       checked: value.overtime,
       select: () => onchange({ overtime: true }),
     },
     {
-      label: "Stop at zero",
+      label: t("behaviour.stopZero"),
       checked: !value.overtime,
       select: () => onchange({ overtime: false }),
     },
@@ -70,9 +71,9 @@
 
 <div class={rowClass}>
   <div>
-    <h3 id="{prefix}-advance" class="font-semibold">Next segment starts</h3>
+    <h3 id="{prefix}-advance" class="font-semibold">{t("behaviour.advance")}</h3>
     <p class="text-sm text-slate-600">
-      Or the timer waits at zero until you tap to start the next one.
+      {t("behaviour.advanceBody")}
     </p>
   </div>
   <Segmented
@@ -83,8 +84,8 @@
 </div>
 <div class={rowClass}>
   <div>
-    <h3 id="{prefix}-chime" class="font-semibold">Chime</h3>
-    <p class="text-sm text-slate-600">Plays when a segment ends.</p>
+    <h3 id="{prefix}-chime" class="font-semibold">{t("behaviour.chime")}</h3>
+    <p class="text-sm text-slate-600">{t("behaviour.chimeBody")}</p>
   </div>
   <Segmented
     name="{prefix}-chime"
@@ -94,16 +95,16 @@
 </div>
 <div class={rowClass}>
   <div>
-    <h3 id="{prefix}-end" class="font-semibold">End sound</h3>
-    <p class="text-sm text-slate-600">Plays when the last segment ends.</p>
+    <h3 id="{prefix}-end" class="font-semibold">{t("behaviour.endSound")}</h3>
+    <p class="text-sm text-slate-600">{t("behaviour.endSoundBody")}</p>
   </div>
   <Segmented name="{prefix}-end" labelledby="{prefix}-end" choices={endSound} />
 </div>
 <div class={rowClass}>
   <div>
-    <h3 id="{prefix}-overtime" class="font-semibold">After zero</h3>
+    <h3 id="{prefix}-overtime" class="font-semibold">{t("behaviour.overtime")}</h3>
     <p class="text-sm text-slate-600">
-      Count up shows how far over the time has gone.
+      {t("behaviour.overtimeBody")}
     </p>
   </div>
   <Segmented

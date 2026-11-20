@@ -1,0 +1,16 @@
+# SvelteKit prerendered routes are extensionless (/about, /privacy) and Apache
+# has no native "try .html" behaviour, so map any path to its .html file when
+# that file exists. The condition only matches when a real <path>.html file is
+# present, so direct file requests and static assets are untouched.
+#
+# Also disable directory listings (Options -Indexes): a folder with no index
+# must 403 rather than expose its file names.
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.+?)/?$ $1.html [L]
+</IfModule>
+
+Options -Indexes

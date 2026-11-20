@@ -2,6 +2,7 @@
      asks no "are you sure?", since a browser dialog would freeze the page. -->
 <script lang="ts">
   import { app } from "#lib/state.svelte.ts";
+  import { t } from "#lib/i18n/index.svelte.ts";
   import Icon from "./Icon.svelte";
 
   const SHOW_MS = 8000;
@@ -25,7 +26,7 @@
       class="flex max-w-full items-center gap-3 rounded-full bg-slate-900 py-1.5 pr-1.5 pl-5 text-white shadow-xl"
     >
       <span class="truncate font-semibold">
-        Deleted “{app.removed.timer.name || "Untitled timer"}”
+        {t("toast.deleted", { name: app.removed.timer.name || t("timer.untitled") })}
       </span>
       <button
         type="button"
@@ -33,7 +34,7 @@
         onclick={() => app.undoRemove()}
       >
         <Icon name="undo" class="size-5" />
-        Undo
+        {t("common.undo")}
       </button>
     </div>
   </div>

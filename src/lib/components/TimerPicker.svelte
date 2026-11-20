@@ -4,6 +4,7 @@
   import { formatTime } from "#lib/run.ts";
   import { app } from "#lib/state.svelte.ts";
   import type { Timer } from "#lib/types.ts";
+  import { t } from "#lib/i18n/index.svelte.ts";
   import Icon from "./Icon.svelte";
 
   let {
@@ -21,7 +22,9 @@
   function summary(timer: Timer): string {
     const minutes = timer.segments.reduce((sum, s) => sum + s.minutes, 0);
     const parts = timer.segments.length;
-    return `${parts} part${parts === 1 ? "" : "s"} · ${formatTime(minutes * 60_000)}`;
+    return parts === 1
+      ? t("picker.summaryOne", { time: formatTime(minutes * 60_000) })
+      : t("picker.summary", { n: parts, time: formatTime(minutes * 60_000) });
   }
 
   /** The buttons that pick a timer, for moving between them with the arrow keys. */
@@ -77,8 +80,8 @@
     aria-controls="timer-picker-panel"
     onclick={toggle}
   >
-    <span class="sr-only">Timer:</span>
-    <span class="truncate">{app.timer.name || "Untitled timer"}</span>
+    <span class="sr-only">{t("timer.lower")}:</span>
+    <span class="truncate">{app.timer.name || t("timer.untitled")}</span>
     <Icon
       name="down"
       class="size-5 shrink-0 text-slate-500 transition {open
@@ -97,12 +100,12 @@
       <ul
         bind:this={list}
         class="flex max-h-[60vh] flex-col gap-0.5 overflow-y-auto"
-        aria-label="Saved timers"
+        aria-label={t("picker.saved")}
         onkeydown={onlistkeydown}
       >
         {#each app.timers as timer (timer.id)}
           {@const isCurrent = timer.id === app.currentId}
-          {@const name = timer.name || "Untitled timer"}
+          {@const name = timer.name || t("timer.untitled")}
           <li
             class="flex items-center gap-1 rounded-xl pr-1 {isCurrent
               ? 'bg-pink-50'
@@ -131,8 +134,8 @@
             <button
               type="button"
               class={rowButton}
-              aria-label="Edit {name}"
-              title="Edit"
+              aria-label={t("timer.editAria", { name })}
+              title={t("timer.edit")}
               onclick={() => {
                 close();
                 onedit(timer.id);
@@ -143,10 +146,10 @@
             <button
               type="button"
               class={rowButton}
-              aria-label="Delete {name}"
+              aria-label={t("timer.deleteAria", { name })}
               title={app.timers.length <= 1
-                ? "Your only timer can't be deleted"
-                : "Delete"}
+                ? t("timer.last")
+                : t("timer.delete")}
               disabled={app.timers.length <= 1}
               onclick={() => app.remove(timer.id)}
             >
@@ -165,7 +168,7 @@
           }}
         >
           <Icon name="plus" class="size-5" />
-          New timer
+          {t("nav.newTimer")}
         </button>
       </div>
     </div>

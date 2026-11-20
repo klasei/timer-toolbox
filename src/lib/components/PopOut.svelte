@@ -6,6 +6,7 @@
   import { formatOvertime, formatTime, view } from "#lib/run.ts";
   import { sounds } from "#lib/sounds.svelte.ts";
   import { app } from "#lib/state.svelte.ts";
+  import { t } from "#lib/i18n/index.svelte.ts";
   import Icon from "./Icon.svelte";
   import Pie from "./Pie.svelte";
 
@@ -17,7 +18,9 @@
   const timer = $derived(app.timer);
   const current = $derived(view(timer, app.run, clock.now));
   const segment = $derived(timer.segments[current.index]);
-  const label = $derived(segment.label.trim() || `Part ${current.index + 1}`);
+  const label = $derived(
+    segment.label.trim() || t("timer.part", { n: current.index + 1 }),
+  );
 </script>
 
 <div
@@ -33,7 +36,7 @@
   />
   <p class="max-w-full truncate text-center text-[9vw] leading-tight font-bold">
     {#if current.status === "ended"}
-      Time's up
+      {t("pie.ended")}
     {:else}
       {#if segment.emoji}<span aria-hidden="true" class="mr-[0.3em]"
           >{segment.emoji}</span
@@ -52,7 +55,7 @@
       <button
         type="button"
         class="inline-flex size-11 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm ring-1 ring-slate-200 hc:bg-neutral-800 hc:text-neutral-200 hc:ring-neutral-600"
-        aria-label="Pause"
+        aria-label={t("pie.pause")}
         onclick={() => app.pause()}
       >
         <Icon name="pause" class="size-5" />
@@ -63,10 +66,10 @@
         type="button"
         class="inline-flex size-11 items-center justify-center rounded-full bg-accent text-white shadow-sm"
         aria-label={current.status === "idle"
-          ? "Start"
+          ? t("pie.start")
           : current.status === "waiting"
-            ? "Start next segment"
-            : "Resume"}
+            ? t("pie.startNext")
+            : t("pie.resume")}
         onclick={() => {
           sounds.unlock();
           if (current.status === "idle") app.start();

@@ -1,6 +1,7 @@
 // App state: the saved timers, the settings and the running timer, all kept in this
 // browser's localStorage. There are no accounts and nothing is uploaded.
 import { COLORS, isColor, nextColor } from "#lib/colors.ts";
+import { t } from "#lib/i18n/index.svelte.ts";
 import * as runs from "#lib/run.ts";
 import {
   DEFAULT_SETTINGS,
@@ -30,14 +31,14 @@ export function newId(): string {
 /** The first visit's timer: a special-ed pull-out group of about half an hour. */
 function exampleTimer(settings: TimerSettings): Timer {
   const parts: [string, string, number, Segment["color"]][] = [
-    ["👋", "Warm-up", 5, "yellow"],
-    ["📖", "Read", 15, "blue"],
-    ["✏️", "Practice", 7, "green"],
-    ["🧹", "Clean up", 3, "orange"],
+    ["👋", t("sample.warmup"), 5, "yellow"],
+    ["📖", t("sample.read"), 15, "blue"],
+    ["✏️", t("sample.practice"), 7, "green"],
+    ["🧹", t("sample.cleanup"), 3, "orange"],
   ];
   return {
     id: newId(),
-    name: "Small group",
+    name: t("sample.name"),
     segments: parts.map(([emoji, label, minutes, color]) => ({
       id: newId(),
       emoji,
@@ -112,7 +113,7 @@ export function toTimer(value: unknown): Timer | null {
   if (segments.length === 0) return null;
   return {
     id: text(value.id, 40) || newId(),
-    name: text(value.name, MAX_NAME_LENGTH, "Timer"),
+    name: text(value.name, MAX_NAME_LENGTH, t("timer.fallback")),
     segments,
     settings: toTimerSettings(value.settings),
   };
@@ -269,7 +270,7 @@ class AppState {
   addTimer(): string {
     const timer: Timer = {
       id: newId(),
-      name: `Timer ${this.timers.length + 1}`,
+      name: t("timer.numbered", { n: this.timers.length + 1 }),
       segments: [
         { id: newId(), emoji: "", label: "", minutes: 5, color: nextColor([]) },
       ],
@@ -287,7 +288,7 @@ class AppState {
     const copy: Timer = {
       ...$state.snapshot(source),
       id: newId(),
-      name: `${source.name} copy`.slice(0, MAX_NAME_LENGTH),
+      name: t("timer.copy", { name: source.name }).slice(0, MAX_NAME_LENGTH),
     };
     copy.segments = copy.segments.map((segment) => ({
       ...segment,

@@ -2,11 +2,12 @@
 <script lang="ts">
   import { onMount, type Snippet } from "svelte";
   import Icon from "./Icon.svelte";
+  import { t } from "#lib/i18n/index.svelte.ts";
 
   let {
     title,
     onclose,
-    closeLabel = "Close",
+    closeLabel = t("common.close"),
     size = "large",
     children,
     footer,

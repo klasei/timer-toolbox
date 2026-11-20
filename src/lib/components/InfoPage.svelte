@@ -3,6 +3,7 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   import { resolve } from "$app/paths";
+  import { brandName, t } from "#lib/i18n/index.svelte.ts";
   import Icon from "./Icon.svelte";
 
   let {
@@ -13,7 +14,7 @@
 </script>
 
 <svelte:head>
-  <title>{title} · Timer Toolbox</title>
+  <title>{title} · {brandName()}</title>
 </svelte:head>
 
 <div class="min-h-screen-safe bg-board-bg">
@@ -26,7 +27,7 @@
         class="inline-flex min-h-11 items-center gap-1 rounded-full pr-4 pl-2 font-semibold text-slate-600 active:bg-slate-100"
       >
         <Icon name="back" class="size-6" />
-        Back to timer
+        {t("common.back")}
       </a>
     </div>
   </header>

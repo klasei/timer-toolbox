@@ -5,6 +5,7 @@
 -->
 <script lang="ts">
   import { resolve } from "$app/paths";
+  import { t } from "#lib/i18n/index.svelte.ts";
 
   /** Pointing at it is enough on a desktop; nothing has to be clicked. */
   let hovering = $state(false);
@@ -55,7 +56,7 @@
     class="inline-flex size-11 items-center justify-center rounded-full transition hover:bg-white active:bg-white aria-expanded:bg-white"
     aria-expanded={open}
     aria-controls="brand-menu-panel"
-    aria-label="teacher.dev: about and privacy"
+    aria-label={t("brand.builtBy")}
     onclick={() => (pinned = !pinned)}
   >
     <img src="/teacher-dev-logo.svg" alt="" width="26" height="26" />
@@ -77,12 +78,12 @@
         target="_blank"
         rel="noopener noreferrer"
       >
-        Built by teacher.dev
+        {t("brand.builtBy")}
       </a>
       <p class="flex items-center gap-2 font-semibold text-slate-600">
-        <a class="hover:underline" href={resolve("/about")}>About</a>
+        <a class="hover:underline" href={resolve("/about")}>{t("nav.about")}</a>
         <span aria-hidden="true" class="text-slate-300">·</span>
-        <a class="hover:underline" href={resolve("/privacy")}>Privacy</a>
+        <a class="hover:underline" href={resolve("/privacy")}>{t("privacy.title")}</a>
       </p>
     </div>
   </div>

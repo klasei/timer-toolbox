@@ -215,17 +215,17 @@ const en = {
 type LangDict = typeof en;
 
 const lt: LangDict = {
-  "brand.name": "Laikmačiai",
+  "brand.name": "Laikmatis",
   "brand.tagline": "Nemokami laikmačiai mokyklai.",
   "brand.description":
-    "Nemokami laikmačiai mokyklai. Pikto laikmatis dalija laiką į pažymėtas dalis, kurias mokiniai mato.",
-  "brand.builtBy": "Sukūrusi teacher.dev",
+    "Nemokami laikmačiai mokyklai. Laikmatis dalija laiką į pažymėtas dalis, kurias mokiniai mato.",
+  "brand.builtBy": "Sukūrė teacher.dev",
 
   "language.change": "Keisti kalbą",
   "language.lt": "Lietuvių",
   "language.en": "English",
 
-  "nav.pie": "Pikto laikmatis",
+  "nav.pie": "Apvalus laikmatis",
   "nav.newTimer": "Naujas laikmatis",
   "nav.settings": "Nustatymai",
   "nav.about": "Apie",
@@ -240,7 +240,7 @@ const lt: LangDict = {
 
   "help.title": "Pagalba",
   "help.intro":
-    "Kol kas {brand} turi vieną įrankį — pikto laikmačių: apskritimą, kuris traukiasi bėgant laikui, kiekviena dalis savo spalva. Štai kaip juo naudotis.",
+    "Kol kas {brand} turi vieną įrankį — apskritą laikmatį, kuris traukiasi bėgant laikui, kiekviena dalis savo spalva. Štai kaip juo naudotis.",
   "help.addSegments": "Dalyčių pridėjimas",
   "help.addSegmentsBody":
     "Pridėkite tiek, kiek reikia užduočiai — pamokos pradžia, trys skaitymo posėdžiai, susitvarkymas. Kiekviena dalis gauna ilgį, spalvą ir, jei norite, pavadinimą.",
@@ -317,10 +317,10 @@ const lt: LangDict = {
   "endSound.bells": "Varpeliai",
   "endSound.none": "Nėra",
 
-  "sample.name": "Maža grupė",
+  "sample.name": "Klasė",
   "sample.warmup": "Pamokos pradžia",
   "sample.read": "Skaitymas",
-  "sample.practice": "Pratymos",
+  "sample.practice": "Pratybos",
   "sample.cleanup": "Susitvarkymas",
 
   "timer.navLabel": "Laikmatis",
@@ -354,7 +354,7 @@ const lt: LangDict = {
   "pie.pause": "Pauzė",
   "pie.resume": "Tęsti",
   "pie.skip": "Praleisti",
-  "pie.finish": "Baigti",
+  "pie.finish": "Uždaryti",
   "pie.addMinute": "+1 min",
   "pie.startNext": "Pradėti kitą dalį",
   "pie.sounds": "Palieskite, kad garsas vėl veiktų",

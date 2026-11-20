@@ -4,6 +4,7 @@
   import { seconds } from "#lib/clock.svelte.ts";
   import { page } from "$app/state";
   import HelpButton from "#lib/components/HelpButton.svelte";
+  import LanguagePicker from "#lib/components/LanguagePicker.svelte";
   import TimerEditor from "#lib/components/TimerEditor.svelte";
   import UndoToast from "#lib/components/UndoToast.svelte";
   import { editor } from "#lib/editor.svelte.ts";
@@ -79,6 +80,9 @@
 {#if page.route.id !== "/pie"}
   <HelpButton class="fixed bottom-4 left-4 z-40" />
 {/if}
+
+<!-- The language is a setting, so it's offered on every screen. -->
+<LanguagePicker class="fixed bottom-4 right-4 z-40" />
 
 {#if editor.editing}
   {@const editing = editor.editing}

@@ -12,6 +12,7 @@
   import { sounds } from "#lib/sounds.svelte.ts";
   import { app } from "#lib/state.svelte.ts";
   import { tabTitle } from "#lib/tabTitle.ts";
+  import { t } from "#lib/i18n/index.svelte.ts";
 
   /** How long the controls stay after the last mouse move or tap while running. */
   const CONTROLS_FADE_MS = 3000;
@@ -26,7 +27,7 @@
   const segment = $derived(timer.segments[current.index]);
   const next = $derived(timer.segments[current.index + 1]);
   const labelOf = (index: number) =>
-    timer.segments[index]?.label.trim() || `Part ${index + 1}`;
+    timer.segments[index]?.label.trim() || t("timer.part", { n: index + 1 });
 
   const controlsHidden = $derived(
     current.status === "running" && clock.now - lastActivity > CONTROLS_FADE_MS,
@@ -77,13 +78,13 @@
     ? 'cursor-none'
     : ''}"
 >
-  <h1 class="sr-only">{timer.name}: pie timer</h1>
+  <h1 class="sr-only">{timer.name}: {t("timer.lower")}</h1>
 
   <nav
     class="flex shrink-0 items-center gap-2 transition-opacity duration-500 {controlsHidden
       ? 'pointer-events-none opacity-0'
       : ''}"
-    aria-label="Timer"
+    aria-label={t("timer.lower")}
   >
     <BrandMenu />
     <TimerPicker
@@ -93,8 +94,8 @@
     <button
       type="button"
       class={nav}
-      aria-label="Edit {timer.name || 'timer'}"
-      title="Edit timer"
+      aria-label={t("timer.editAria", { name: timer.name || t("timer.lower") })}
+      title={t("timer.edit")}
       onclick={() => editor.edit(timer.id)}
     >
       <Icon name="pencil" class="size-5" />
@@ -104,15 +105,15 @@
         <button
           type="button"
           class={nav}
-          aria-label={popout.open ? "Close pop-out" : "Pop out timer"}
+          aria-label={popout.open ? t("timer.popoutClose") : t("timer.popout")}
           aria-pressed={popout.open}
-          title="Pop out: keep the timer on top of other windows"
+          title={t("timer.popoutHint")}
           onclick={() => popout.toggle()}
         >
           <Icon name="popout" class="size-6" />
         </button>
       {/if}
-      <a href={resolve("/settings")} class={nav} aria-label="Settings">
+      <a href={resolve("/settings")} class={nav} aria-label={t("nav.settings")}>
         <Icon name="gear" class="size-6" />
       </a>
     </div>
@@ -138,19 +139,19 @@
         <p
           class="text-[clamp(2rem,8vmin,5.5rem)] leading-tight font-bold break-words"
         >
-          Time's up!
+          {t("pie.ended")}
         </p>
         {#if timer.settings.overtime}
           <p
             class="text-[clamp(2.5rem,11vmin,8rem)] leading-none font-bold text-slate-500 tabular-nums hc:text-neutral-300"
-            aria-label="{formatOvertime(current.overtime)} over"
+            aria-label={t("pie.over", { time: formatOvertime(current.overtime) })}
           >
             +{formatOvertime(current.overtime)}
           </p>
         {/if}
       {:else}
         <p
-          class="max-w-full text-[clamp(2rem,8vmin,5.5rem)] leading-tight font-bold break-words"
+          class="max-w-full text-[clamp(1.5rem,6.5vmin,4.5rem)] leading-tight font-bold break-words"
         >
           {#if segment.emoji}<span aria-hidden="true" class="mr-[0.3em]"
               >{segment.emoji}</span
@@ -159,7 +160,7 @@
         </p>
         <p
           class="text-[clamp(3rem,13vmin,9rem)] leading-none font-bold tabular-nums"
-          aria-label="{formatTime(current.segmentLeft)} left"
+          aria-label={t("pie.left", { time: formatTime(current.segmentLeft) })}
         >
           {formatTime(current.segmentLeft)}
         </p>
@@ -167,7 +168,7 @@
           <p
             class="mt-2 text-[clamp(1rem,3vmin,1.75rem)] font-semibold text-slate-600 hc:text-neutral-300"
           >
-            Next: {#if next.emoji}<span aria-hidden="true" class="mr-[0.3em]"
+            {t("pie.next")} {#if next.emoji}<span aria-hidden="true" class="mr-[0.3em]"
                 >{next.emoji}</span
               >
             {/if}{labelOf(current.index + 1)} · {formatTime(
@@ -178,7 +179,10 @@
         <p
           class="text-[clamp(0.9rem,2.5vmin,1.4rem)] text-slate-500 hc:text-neutral-400"
         >
-          {formatTime(current.totalLeft)} left of {formatTime(current.total)}
+          {t("pie.leftOf", {
+            time: formatTime(current.totalLeft),
+            total: formatTime(current.total),
+          })}
         </p>
       {/if}
     </section>
@@ -196,29 +200,29 @@
       {#if current.status !== "idle"}
         <button type="button" class={control} onclick={() => app.restart()}>
           <Icon name="restart" class="size-5" />
-          Restart
+          {t("pie.restart")}
         </button>
       {/if}
 
       {#if current.status === "idle"}
         <button type="button" class={big} onclick={primary}>
           <Icon name="play" class="size-6" />
-          Start
+          {t("pie.start")}
         </button>
       {:else if current.status === "running"}
         <button type="button" class={big} onclick={primary}>
           <Icon name="pause" class="size-6" />
-          Pause
+          {t("pie.pause")}
         </button>
       {:else if current.status === "paused"}
         <button type="button" class={big} onclick={primary}>
           <Icon name="play" class="size-6" />
-          Resume
+          {t("pie.resume")}
         </button>
       {:else if current.status === "waiting" && next}
         <button type="button" class={big} onclick={primary}>
           <Icon name="play" class="size-6" />
-          Start
+          {t("pie.start")}
           {#if next.emoji}<span aria-hidden="true">{next.emoji}</span>{/if}
           {labelOf(current.index + 1)}
         </button>
@@ -227,12 +231,12 @@
       {#if current.status === "running" || current.status === "paused"}
         <button type="button" class={control} onclick={() => app.advance()}>
           <Icon name="skip" class="size-5" />
-          {next ? "Skip" : "Finish"}
+          {next ? t("pie.skip") : t("pie.finish")}
         </button>
       {/if}
       {#if current.status !== "idle"}
         <button type="button" class={control} onclick={() => app.addMinute()}>
-          +1 min
+          {t("pie.addMinute")}
         </button>
       {/if}
     </div>
@@ -251,7 +255,7 @@
       onclick={() => sounds.unlock()}
     >
       <Icon name="sound" class="size-5" />
-      Tap to turn sounds back on
+      {t("pie.sounds")}
     </button>
   </div>
 {/if}
